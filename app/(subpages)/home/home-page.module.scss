@@ -1,0 +1,41 @@
+.container {
+  height: 100%;
+  width: 100%;
+}
+
+.wrapper {
+  height: 100%;
+  width: 100%;
+  // padding: 3rem // 설정시 desktop에서 overflow: y 됬을때 입력하기 편하지만 scroll bar 이상해짐
+}
+
+.input {
+  padding: 3rem; // padding: 0rem
+  font-size: 2rem;
+  line-height: 1.5;
+  font-weight: 400;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+
+  white-space: pre-wrap;
+
+  // focus
+  &:focus {
+    border: none;
+    outline: none;
+  }
+
+  // placeholder
+  &[contenteditable='true']:empty:before,
+  &[contenteditable='true']:focus:before {
+    content: attr(data-placeholder);
+    color: var(--gray-700);
+    pointer-events: none;
+    display: block;
+  }
+
+  &[contenteditable='true']:focus:not(:empty):before {
+    content: '';
+  }
+}

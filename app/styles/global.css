@@ -2,20 +2,10 @@
 @import './color-palette.css';
 
 :root {
-  --bg: #fff;
-  --fg: #000;
-
   /* Typography */
-  /* --font-sans: var(--font-pretendard), -apple-system, BlinkMacSystemFont,
-    'Roboto', 'Helvetica Neue', sans-serif;
-  --font-mono: var(--font-pretendard), 'SFMono-Regular', 'Consolas',
-    'Liberation Mono', 'Menlo', monospace; */
   --font-sans: -apple-system, 'system-ui', 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
 }
-
-/* [data-theme='dark'] {
-} */
 
 * {
   box-sizing: border-box;
@@ -25,8 +15,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--white);
+  color: var(--black);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -34,6 +24,14 @@ body {
   font-size: 16px;
   line-height: 1.55em;
   height: 100%;
+}
+
+[data-theme='dark'] {
+  html,
+  body {
+    background: var(--neutral-950);
+    color: var(--white);
+  }
 }
 
 body {

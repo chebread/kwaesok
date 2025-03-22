@@ -30,12 +30,21 @@
   &[contenteditable='true']:empty:before,
   &[contenteditable='true']:focus:before {
     content: attr(data-placeholder);
-    color: var(--gray-700);
+    color: var(--zinc-700);
     pointer-events: none;
     display: block;
   }
 
   &[contenteditable='true']:focus:not(:empty):before {
     content: '';
+  }
+}
+
+[data-theme='dark'] {
+  .input {
+    &[contenteditable='true']:empty:before,
+    &[contenteditable='true']:focus:before {
+      color: var(--zinc-300);
+    }
   }
 }

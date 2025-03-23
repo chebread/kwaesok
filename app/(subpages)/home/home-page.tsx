@@ -55,11 +55,8 @@ export default function HomePage() {
 
   return (
     <div className={style.container}>
-      <div className={style.buttonWrapper}>
-        {/* <a
-          className={style.buttonA}
-          href="https://github.com/chebread"
-        > */}
+      {/* <div className={style.buttonWrapper}>
+       
         <button
           className={clsx(style.button, {
             [style.visible]: visible,
@@ -75,8 +72,8 @@ export default function HomePage() {
         >
           개발자 페이지 바로가기
         </button>
-        {/* </a> */}
-      </div>
+ 
+      </div> */}
       <TextEditor className={style.input} />
     </div>
   );

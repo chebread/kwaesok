@@ -12,6 +12,7 @@ export default function TextEditor({ className }: { className: any }) {
 
   const saveDataToUrl = (key: string, value: string) => {
     // value must be encoded
+
     router.push(pathname + '?data=' + value);
   };
 
@@ -50,6 +51,17 @@ export default function TextEditor({ className }: { className: any }) {
       selection.removeAllRanges();
       selection.addRange(range);
     }
+
+    const encodedText = encodeURIComponent(text);
+
+    console.log(loadDataFromUrl('data'));
+
+    router.push(
+      pathname +
+        '?data=' +
+        encodeURIComponent(loadDataFromUrl('data')) +
+        encodedText
+    );
   };
 
   // useEffect(() => {

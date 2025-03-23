@@ -2,7 +2,7 @@
 The quick and simple memo
 
 ## Website link
-https://kwaesok.pages.dev
+https://kwaesok.vercel.app
 
 ## License
 MIT LICENSE &copy; 2025 Cha Haneum

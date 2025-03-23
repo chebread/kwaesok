@@ -1,94 +1,84 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import style from './home-page.module.scss';
 import TextEditor from '@components/text-editor';
+import { useRouter } from 'next/navigation';
+import clsx from 'clsx';
+
+// 사용자가 입력을 마치면 (focus 중단) url에 data 저장
 
 export default function HomePage() {
+  const [visible, setVisible] = useState(false);
+  const router = useRouter();
+
   useEffect(() => {
-    // 페이지 가시성 변경 핸들러
+    const checkAndShowAlert = () => {
+      const firstAccessTime = localStorage.getItem('firstAccessTime');
+      const alertShown = localStorage.getItem('alertShown');
+
+      if (!firstAccessTime) {
+        localStorage.setItem('firstAccessTime', Date.now().toString());
+        return;
+      }
+
+      if (!alertShown && Date.now() - parseInt(firstAccessTime) >= 3000) {
+        console.log('1분이 경과했습니다.'); // 작동 안함 시발
+
+        setVisible(true);
+
+        // nike rouneded btn 처럼, 개발자 페이지 이동하기 버튼 만들기 이 버튼은 꼭 개발자 페이지를 접속해야만 없어짐 즉, 클릭해야만 alertShown이 true가 됨 btn 클릭 안하면 alertShown이 false고 경과하면 계속 뜸
+        // localStorage.setItem('alertShown', 'true');
+      }
+    };
+
     const handleVisibilityChange = () => {
-      const now = Date.now();
-
-      if (document.hidden) {
-        // 페이지 숨김 시 현재까지 누적 시간 저장
-        const startTime = parseInt(
-          localStorage.getItem('pageStartTime') || '0'
-        );
-        if (startTime > 0) {
-          const currentElapsed = parseInt(
-            localStorage.getItem('pageElapsedTime') || '0'
-          );
-          const newElapsed = currentElapsed + (now - startTime);
-          localStorage.setItem('pageElapsedTime', newElapsed.toString());
-          localStorage.removeItem('pageStartTime');
-        }
-      } else {
-        // 페이지 다시 보임 시 시작 시간 기록
-        localStorage.setItem('pageStartTime', now.toString());
+      if (!document.hidden) {
+        checkAndShowAlert();
       }
     };
 
-    // 타이머 체크 함수
-    const checkTimer = () => {
-      const now = Date.now();
-      const startTime = parseInt(localStorage.getItem('pageStartTime') || '0');
-      const elapsedTime = parseInt(
-        localStorage.getItem('pageElapsedTime') || '0'
-      );
+    // 초기 실행
+    const intervalId = (function () {
+      checkAndShowAlert(); // 즉시 실행
+      return setInterval(checkAndShowAlert, 1000); // 1초마다 실행
+    })();
 
-      // 현재 보고 있는 시간 + 이전에 누적된 시간
-      const totalTime = (startTime > 0 ? now - startTime : 0) + elapsedTime;
-
-      if (totalTime >= 60000) {
-        // 1분 경과
-        alert('1분이 경과했습니다.');
-        // 타이머 초기화
-        localStorage.setItem('pageElapsedTime', '0');
-        localStorage.setItem('pageStartTime', now.toString());
-      }
-    };
-
-    // 초기 설정
-    if (!document.hidden) {
-      localStorage.setItem('pageStartTime', Date.now().toString());
-      if (!localStorage.getItem('pageElapsedTime')) {
-        localStorage.setItem('pageElapsedTime', '0');
-      }
-    }
-
-    // 이벤트 리스너 등록
+    // 가시성 변경 이벤트 리스너 등록
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // 주기적으로 타이머 체크
-    const intervalId = setInterval(checkTimer, 1000);
-
-    // 컴포넌트 언마운트 시 정리
     return () => {
-      clearInterval(intervalId);
+      clearInterval(intervalId); // 인터벌 정리
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-
-      // 언마운트 시 현재까지 누적 시간 저장
-      if (!document.hidden) {
-        const startTime = parseInt(
-          localStorage.getItem('pageStartTime') || '0'
-        );
-        if (startTime > 0) {
-          const currentElapsed = parseInt(
-            localStorage.getItem('pageElapsedTime') || '0'
-          );
-          const newElapsed = currentElapsed + (Date.now() - startTime);
-          localStorage.setItem('pageElapsedTime', newElapsed.toString());
-        }
-      }
     };
   }, []);
 
   return (
     <div className={style.container}>
-      <div className={style.wrapper}>
-        <TextEditor className={style.input} />
+      <div className={style.buttonWrapper}>
+        {/* <a
+          className={style.buttonA}
+          target="_blank"
+          href="https://github.com/chebread"
+        > */}
+        <button
+          className={clsx(style.button, {
+            [style.visible]: visible,
+          })}
+          onClick={() => {
+            setVisible(!visible);
+            localStorage.setItem('alertShown', 'true'); // alert가 보였음(클릭됨)을 true로 설정. 다시는 btn이 표시 안됨
+
+            router.push('https://github.com/chebread');
+
+            // 경과후 부드럽게 뜨게 하기
+          }}
+        >
+          개발자 페이지 바로가기
+        </button>
+        {/* </a> */}
       </div>
+      <TextEditor className={style.input} />
     </div>
   );
 }

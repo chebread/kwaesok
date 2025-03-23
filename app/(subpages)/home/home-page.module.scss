@@ -1,13 +1,61 @@
 .container {
+  position: relative;
   height: 100%;
   width: 100%;
 }
 
-.wrapper {
-  height: 100%;
+.buttonWrapper {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
   width: 100%;
-  // padding: 3rem // 설정시 desktop에서 overflow: y 됬을때 입력하기 편하지만 scroll bar 이상해짐
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+
+  // .buttonA {
+  //   width: 100%;
+  //   max-width: 35rem;
+  //   border-radius: 1000px;
+  // }
+
+  .button {
+    display: block;
+    cursor: pointer;
+
+    font-size: 1rem;
+    @media (max-width: 35rem) {
+      font-size: 0.9rem;
+    }
+    line-height: 1;
+    font-weight: 600;
+    color: white;
+
+    padding: 1.25rem;
+    background-color: var(--neutral-950);
+
+    max-width: 35rem;
+    width: 100%;
+    border-radius: 1000px; // https://stackoverflow.com/questions/29966499/border-radius-in-percentage-and-pixels-px-or-em
+
+    opacity: 0;
+
+    transition: opacity 0.2s ease-out;
+  }
+
+  .visible {
+    opacity: 1;
+  }
 }
+
+// .wrapper {
+//   height: 100%;
+//   width: 100%;
+//   // padding: 3rem // 설정시 desktop에서 overflow: y 됬을때 입력하기 편하지만 scroll bar 이상해짐
+// }
 
 .input {
   padding: 3rem; // padding: 0rem

@@ -1,29 +1,26 @@
 'use client';
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 export default function TextEditor({ className }: { className: any }) {
   const inputRef: any = useRef<HTMLDivElement | null>(null);
   const [content, setContent] = useState('');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const handleInput = () => {
-      if (inputRef.current) {
-        setContent(inputRef.current.textContent || '');
-      }
-    };
+  const saveDataToUrl = (key: string, value: string) => {
+    // value must be encoded
+    router.push(pathname + '?data=' + value);
+  };
 
-    const element = inputRef.current;
-    if (element) {
-      element.addEventListener('input', handleInput);
-    }
+  const loadDataFromUrl = (key: string) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const data = urlParams.get(key);
 
-    return () => {
-      if (element) {
-        element.removeEventListener('input', handleInput);
-      }
-    };
-  }, []);
+    return data ? decodeURIComponent(data) : '';
+  };
 
   const handleBlur = () => {
     if (inputRef.current && !inputRef.current.textContent.trim()) {
@@ -55,6 +52,37 @@ export default function TextEditor({ className }: { className: any }) {
     }
   };
 
+  // useEffect(() => {
+  //   const handleInput = () => {
+  //     if (inputRef.current) {
+  //       console.log('x');
+
+  //       setContent(inputRef.current.textContent || '');
+  //     }
+  //   };
+
+  //   const element = inputRef.current;
+  //   if (element) {
+  //     element.addEventListener('input', handleInput);
+  //   }
+
+  //   return () => {
+  //     if (element) {
+  //       element.removeEventListener('input', handleInput);
+  //     }
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    const savedData = loadDataFromUrl('data');
+    if (savedData) {
+      setContent(savedData);
+      if (inputRef.current) {
+        inputRef.current.textContent = savedData;
+      }
+    }
+  }, []);
+
   return (
     <div
       ref={inputRef}
@@ -65,10 +93,16 @@ export default function TextEditor({ className }: { className: any }) {
       onInput={(event: any) => {
         const text = event.target.innerText.replace(/\n\n/g, '\n');
         setContent(text);
-        console.log('>' + content + '<');
 
-        if (content === '') {
-          handleBlur(); // placeholder 다시 보이기
+        // 텍스트가 실제로 비어있는지 확인 (공백, 줄바꿈만 있는 경우도 고려)
+        if (!text.trim()) {
+          // 빈 경우 쿼리스트링 없이 페이지로 이동
+          router.push(pathname);
+
+          handleBlur();
+        } else {
+          const encodedText = encodeURIComponent(text);
+          saveDataToUrl('data', encodedText);
         }
       }}
       onKeyDown={(event: any) => {
@@ -78,7 +112,6 @@ export default function TextEditor({ className }: { className: any }) {
         }
         if (event.keyCode === 13) {
           // New Line
-          // event.preventDefault();
         }
       }}
       onPaste={handlePasteWithSelectionApi}

@@ -58,7 +58,6 @@ export default function HomePage() {
       <div className={style.buttonWrapper}>
         {/* <a
           className={style.buttonA}
-          target="_blank"
           href="https://github.com/chebread"
         > */}
         <button

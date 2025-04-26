@@ -54,9 +54,12 @@
 
 .input {
   padding: 3rem 3rem 5rem 3rem; // padding: 0rem
+  @media (max-width: 35rem) {
+    padding: 2rem 2rem 4rem 2rem; // 하단에 더 추가되어야 함
+  }
   font-size: 1.5rem;
   @media (max-width: 35rem) {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
   line-height: 1.5;
   font-weight: 400;
